@@ -1,3 +1,10 @@
+"""
+Date: 2023-02-15
+Author: Gael Emiliano Herrera Acuña
+School: UABC
+Class: 21
+"""
+
 val = input('Type a number: ')
 val = int(val)
 

@@ -1,6 +1,3 @@
-from ast import List
-
-
 def tryIntConvertion(stringToConvert: str) -> int | None:
     convertedInt: int
 
