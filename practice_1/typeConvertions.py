@@ -10,7 +10,8 @@ print("Welcome to python operators practice!\n")
 
 while isinstance(val, int) != True:
     val = input("Enter a string to try int convertion: ")
-    val = tryTypeConvertion(val)
+    val = tryTypeConvertion(val, int)
+
     if isinstance(val, int) != True:
         print("\nThe input is wrong! Continuing to another try...\n")
     else:

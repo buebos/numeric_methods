@@ -1,5 +1,8 @@
 # Converts a string to integer or returns null if error
-def tryTypeConvertion(stringToConvert: str, typeTo: int | float | complex) -> int | None:
+from typing import Callable
+
+
+def tryTypeConvertion(stringToConvert: str, typeTo: str | int | float | complex) -> int | None:
     convertedInt: int
 
     try:

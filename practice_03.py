@@ -8,4 +8,4 @@ height: float = persistInputType(f"Base is {base}, put the height in: ", errorMe
 area: float = round(base * height / 2, 2)
 perimeter: float = math.sqrt(height**2 + (base / 2) ** 2) * 2 + base
 
-print(f'{"="*30}\n\tArea | Perimeter\n{"="*30}\n\t{area}  | {perimeter:.3f}'.format(permiter=perimeter))
+print(f'{"="*30}\n\tArea | Perimeter\n{"="*30}\n\t{area}  | {perimeter:.3f}'.format(perimeter=perimeter))
