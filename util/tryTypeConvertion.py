@@ -2,7 +2,7 @@
 from typing import Callable
 
 
-def tryTypeConvertion(stringToConvert: str, typeTo: str | int | float | complex) -> int | None:
+def tryTypeConvertion(stringToConvert: str, typeTo: Callable) -> int | None:
     convertedInt: int
 
     try:
