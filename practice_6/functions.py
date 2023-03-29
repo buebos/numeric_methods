@@ -2,8 +2,18 @@ def factorial(num: int) -> int:
     return 1 if num <= 1 else num * factorial(num - 1)
 
 
-def fibonacci(index: int, chain: list[int] = [], position: str = "main") -> int:
-    print("Running index:", index, "| Chain:", chain, "| Position:", position, "| Returning:")
+def fibonacci(
+    index: int, chain: list[int] = [], position: str = "main"
+) -> int:
+    print(
+        "Running index:",
+        index,
+        "| Chain:",
+        chain,
+        "| Position:",
+        position,
+        "| Returning:",
+    )
 
     if index == 0:
         return 0
@@ -13,7 +23,9 @@ def fibonacci(index: int, chain: list[int] = [], position: str = "main") -> int:
     chain1: list[int] = chain + [index - 1]
     chain2: list[int] = chain + [index - 2]
 
-    return fibonacci(index - 1, chain1, "-1") + fibonacci(index - 2, chain2, "-2")
+    return fibonacci(index - 1, chain1, "-1") + fibonacci(
+        index - 2, chain2, "-2"
+    )
 
 
 def fibonacci_display_to(index: int) -> None:
