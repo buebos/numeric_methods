@@ -43,11 +43,11 @@ def bisection(
     return xt
 
 
-def ecuation(x: float) -> float:
+def equation(x: float) -> float:
     return np.exp(-x) - x
 
 
-bisection_result = bisection(ecuation, 2.0, -1.0)
+bisection_result = bisection(equation, 2.0, -1.0)
 
 print(bisection_result)
-print(ecuation(bisection_result))
+print(equation(bisection_result))
