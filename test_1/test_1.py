@@ -20,11 +20,12 @@ factorial_cache = 1
 
 
 def taylor_series_cached(n: int, x: int):
+    global factorial_cache
+    factorial_cache = 1
+
     sum: float = 1
 
     for i in range(1, n):
-        global factorial_cache
-
         factorial_cache = factorial_cache * i
 
         sum += x**i / factorial_cache
