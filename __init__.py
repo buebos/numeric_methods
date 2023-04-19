@@ -7,8 +7,8 @@ from util.clear import clear
 
 clear()
 
-x = float(input("Type x: "))
-n = int(input("Type n: "))
+x = float(input("Type x for the taylor series: "))
+n = int(input("Type n for the amount of terms: "))
 table_results = []
 xn = []
 fxn = []
@@ -16,7 +16,7 @@ sum: float = 0
 
 
 def error(real: float, experimental: float):
-    return abs((real - experimental) / real) * 100
+    return round(abs((real - experimental) / real) * 100, 2)
 
 
 def calc_error_of_taylor(iterations: int, fx: float, x: float):
@@ -26,13 +26,19 @@ def calc_error_of_taylor(iterations: int, fx: float, x: float):
 
 
 for i in range(0, n):
-    current_result = x**i / math.factorial(i)
-    sum += current_result
+    current_term = x**i / math.factorial(i)
+    sum += round(current_term, 4)
     calc_error_of_taylor(i + 1, sum, x)
 
 plt.plot(xn, fxn, color="red", linewidth=2)
 plt.grid()
 
-print(tabulate(table_results, ["iterations", "experimental result", "error percentage"]))
+print(
+    tabulate(
+        table_results,
+        ["Amount of terms", "Experimental result", "Error percentage (%)"],
+        tablefmt="grid",
+    )
+)
 
 # %%
