@@ -1,3 +1,7 @@
+import math
+from typing import Callable
+
+
 def taylor_series(n: int, x: int):
     sum: float = 1
 
@@ -32,8 +36,11 @@ def taylor_series_cached(n: int, x: int):
 
     return sum
 
-
-print("1er termino: ", taylor_series_cached(1, 1))
-print("2do termino: ", taylor_series_cached(2, 1))
-print("3er termino: ", taylor_series_cached(3, 1))
-print("4to termino: ", taylor_series_cached(4, 1))
+def taylor_series_math(n: int, x: float, callback: Callable[[float, float, float, float], None] | None = None):
+    sum: float = 1 + x
+    for i in range(2, n):
+        current_result = x**i / math.factorial(i)
+        if callback is not None:
+            callback(i, current_result, x, sum)
+        sum += current_result
+    return sum
