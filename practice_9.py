@@ -1,35 +1,37 @@
-from typing import Callable
-import matplotlib.pyplot as plt
+import math
+from tabulate import tabulate
+from matplotlib import pyplot as plt
+from util.clear import clear
 
-def graph(
-    fn: Callable[[float], float],
-    xi: float,
-    xu: float,
-    step: float,
-    callback: Callable[[float, float], None] | None,
-    run_plot: bool = False,
-    line_color="black",
-    line_width=2.0,
-):
-    if xi > xu:
-        return
 
-    i = xi
-    xn = []
-    fxn = []
+def error(real: float, experimental: float):
+    return abs((real - experimental) / real) * 100
 
-    while i <= xu:
-        curent_result = fn(i)
-        xn.append(i)
-        fxn.append(curent_result)
 
-        if callback:
-            callback(i, curent_result)
+def calc_error_of_taylor(iterations: int, fx: float, x: float):
+    table_results.append([iterations, fx, error(math.exp(x), fx)])
+    xn.append(iterations)
+    fxn.append(fx)
 
-        i += step
 
-    if run_plot:
-        plt.plot(xn, fxn, color=line_color, linewidth=line_width)
-        plt.grid()
+table_results = []
+xn = []
+fxn = []
+sum: float = 0
 
-    return xn, fxn
+
+clear()
+
+x = float(input("Type x: "))
+n = int(input("Type n: "))
+
+
+for i in range(0, n):
+    current_result = x**i / math.factorial(i)
+    sum += current_result
+    calc_error_of_taylor(i + 1, sum, x)
+
+plt.plot(xn, fxn, color="red", linewidth=2)
+plt.grid()
+
+print(tabulate(table_results, ["iterations", "experimental result", "error percentage"]))

@@ -1,38 +1,21 @@
 # %%
-
-import math
+import matplotlib.pyplot as plt
 from tabulate import tabulate
-from matplotlib import pyplot as plt
-from util.clear import clear
+from methods.bisection import bisection
+import math
+import numpy as np
 
-clear()
-
-x = float(input("Type x: "))
-n = int(input("Type n: "))
-table_results = []
-xn = []
-fxn = []
-sum: float = 0
+from util.evaluate_function import evaluate_function
 
 
-def error(real: float, experimental: float):
-    return abs((real - experimental) / real) * 100
+def function(x: float):
+    return 9.81 * 68.1 / x * (1 - math.exp(-10 * x / 68.1)) - 40
 
 
-def calc_error_of_taylor(iterations: int, fx: float, x: float):
-    table_results.append([iterations, fx, error(math.exp(x), fx)])
-    xn.append(iterations)
-    fxn.append(fx)
-
-
-for i in range(0, n):
-    current_result = x**i / math.factorial(i)
-    sum += current_result
-    calc_error_of_taylor(i + 1, sum, x)
-
-plt.plot(xn, fxn, color="red", linewidth=2)
+xn, fxn = evaluate_function(function, 2, 22, 0.1, None)
+plt.plot(xn, fxn)
 plt.grid()
+print(tabulate(np.transpose([xn, fxn]), ["X", "FX"], tablefmt="grid"))
 
-print(tabulate(table_results, ["iterations", "experimental result", "error percentage"]))
-
+print(bisection(function, 100, -10, 0.000001))
 # %%
