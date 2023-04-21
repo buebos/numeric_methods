@@ -27,10 +27,14 @@ for i in range(0, n + 1):
     table_results[1].append(sum)
     table_results[2].append(error(math.exp(x), sum))
 
-
 plt.plot(table_results[0], table_results[1], color="red", linewidth=2)
 plt.grid()
 
-print(tabulate(transpose(table_results), ["Terms", "Experimental result", "Error percentage %"]))
+print(
+    tabulate(
+        transpose(table_results),
+        ["Terms", "Experimental result", "Error percentage %"],
+    )
+)
 
 # %%
