@@ -20,19 +20,10 @@ clear()
 xi = float(input("Type x inferior: "))
 xs = float(input("Type x superior: "))
 while xi > xs:
-    xs = float(
-        input(
-            "Type x superior again, be sure to not type a number greater than the x inferior: "
-        )
-    )
-
+    xs = float(input("Type x superior again, be sure to not type a number greater than the x inferior: "))
 step = float(input("Type the step between each x iteration: "))
 while step < 0:
-    step = float(
-        input(
-            "Step must be a number greater than 0, type it again please: "
-        )
-    )
+    step = float(input("Step must be a number greater than 0, type it again please: "))
 
 x = xi
 n = int(input("Type n: "))
@@ -51,12 +42,7 @@ while x <= xs:
 plt.plot(results_1[0], results_1[1], color="red", linewidth=2)
 plt.grid()
 
-print(
-    tabulate(
-        transpose(results_1),
-        ["Exponential", "Experimental result", "Error percentage %"],
-    )
-)
+print(tabulate(transpose(results_1), ["Exponential", "Experimental result", "Error percentage %"], tablefmt="grid"))
 
 x = int(input("Type x to raise Euler: "))
 n = int(input("Type n: "))
@@ -70,11 +56,6 @@ for i in range(n + 1):
     results_2[1].append(sum_ex)
     results_2[2].append(error(math.exp(x), sum_ex))
 
-print(
-    tabulate(
-        transpose(results_2),
-        ["Terms", "Sum with term amount", "Error percentage %"],
-    )
-)
+print(tabulate(transpose(results_2), ["Terms", "Sum with term amount", "Error percentage %"], tablefmt="grid"))
 
 # %%

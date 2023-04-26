@@ -1,11 +1,12 @@
 # %%
+import math
+
 import matplotlib.pyplot as plt
 from tabulate import tabulate
-from methods.bisection import bisection
-import math
-import numpy as np
 
+from methods.bisection import bisection
 from util.evaluate_function import evaluate_function
+from util.transpose import transpose
 
 
 def function(x: float):
@@ -15,7 +16,7 @@ def function(x: float):
 xn, fxn = evaluate_function(function, 2, 22, 0.1, None)
 plt.plot(xn, fxn)
 plt.grid()
-print(tabulate(np.transpose([xn, fxn]), ["X", "FX"], tablefmt="grid"))
+print(tabulate(transpose([xn, fxn]), ["X", "FX"], tablefmt="grid"))
 
-print(bisection(function, 100, -10, 0.000001))
+print(bisection(function, 100, -10, 0.0005))
 # %%
