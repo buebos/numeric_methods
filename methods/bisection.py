@@ -3,7 +3,7 @@ from typing import Callable
 import numpy as np
 
 
-def bisection(f: Callable[[float], float], x0: float, x1: float, max_error=0.5):
+def bisection(f: Callable[[float], float], x0: float, x1: float, callback: Callable | None= None, max_error=0.5):
     fx0 = f(x0)
     fx1 = f(x1)
 
@@ -29,6 +29,9 @@ def bisection(f: Callable[[float], float], x0: float, x1: float, max_error=0.5):
 
         if xt_prev != None:
             error = abs((xt - xt_prev) / xt) * 100
+
+        if callback:
+            callback(x0, x1, xt, error, f)
 
         if fxt * fx1 < 0:
             x0 = xt

@@ -18,5 +18,15 @@ plt.plot(xn, fxn)
 plt.grid()
 print(tabulate(transpose([xn, fxn]), ["X", "FX"], tablefmt="grid"))
 
-print(bisection(function, 100, -10, 0.0005))
+table = []
+
+
+def callback(xi, xs, xr, error, f):
+    table.append([xi, xs, xr, f(xi), f(xs), f(xr), error])
+
+
+print(bisection(function, 100, -10, callback, max_error=0.0005))
+
+print(tabulate(table, ["xi", "xs", "xr", "fxi", "fxs", "fxr", "error"], tablefmt="grid"))
+
 # %%
