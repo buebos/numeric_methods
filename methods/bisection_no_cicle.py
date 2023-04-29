@@ -1,12 +1,5 @@
 import math
 
-import matplotlib.pyplot as plt
-from tabulate import tabulate
-
-from methods.bisection import bisection
-from util.evaluate_function import evaluate_function
-from util.transpose import transpose
-
 
 def f(x: float):
     return 9.81 * 68.1 / x * (1 - math.exp(-10 * x / 68.1)) - 40
@@ -667,4 +660,3 @@ def help_this_function_is_so_long():
 
 
 help_this_function_is_so_long()
-print(bisection(f, 2, 22, 0.005))
