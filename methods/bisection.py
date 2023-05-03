@@ -31,7 +31,7 @@ def bisection(f: Callable[[float], float], x0: float, x1: float, callback: Calla
             error = abs((xt - xt_prev) / xt) * 100
 
         if callback:
-            callback(x0, x1, xt, error, f)
+            callback(x0, x1, xt, error, f, iterations)
 
         if fxt * fx1 < 0:
             x0 = xt
