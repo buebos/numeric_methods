@@ -1,59 +1,48 @@
 # %%
-import math
+from matplotlib import pyplot as plt
 
-import matplotlib.pyplot as plt
-from tabulate import tabulate
-
-from methods.bisection import bisection
-from util.evaluate_function import evaluate_function
-from util.transpose import transpose
-
-
-def function(x: float):
-    return 9.81 * 68.1 / x * (1 - math.exp(-10 * x / 68.1)) - 40
-
-
-def scarborough(digits: float):
-    return 0.5 * 10 ** (2 - digits)
+n = int(input("n: "))
+x = []
+y = []
+sumx = 0
+sumy = 0
+sumx2 = 0
+sumxy = 0
+xavrg = 0
+yavrg = 0
 
 
-xi = float(
-    input("Type the initial inferior limit for bisection method (x0): ")
-)
-xs = float(
-    input("Type the initial inferior limit for bisection method (x1): ")
-)
-max_error = scarborough(float(input("Type the significant digits: ")))
-xn, fxn = evaluate_function(function, 2, 22, 0.1, None)
-table = []
+for i in range(n):
+    xi = float(input(f"x{i}: "))
+    yi = float(input(f"y{i}: "))
 
+    x.append(xi)
+    y.append(yi)
+    sumx += x[i]
+    sumy += y[i]
+    sumx2 += (x[i]) ** 2
+    sumxy += x[i] * y[i]
 
-def callback(xi, xs, xr, error, f, iterations):
-    table.append(
-        [
-            iterations,
-            xi,
-            xs,
-            xr,
-            f(xi),
-            f(xs),
-            f(xr),
-            round(error, len(str(max_error))) if error else None,
-        ]
-    )
+xavrg = sumx / n
+yavrg = sumy / n
 
+print(f"sumx {sumx}")
+print(f"sumy {sumy}")
+print(f"sumx2 {sumx2}")
+print(f"sumx**2 {sumx**2}")
+print(f"sumxy {sumxy}")
+print(f"xavrg {xavrg}")
+print(f"yavrg {yavrg}")
 
-bisection(function, xi, xs, callback, max_error=max_error)
+m = ((n * sumxy) - (sumx * sumy)) / (n * sumx2 - (sumx**2))
+b = (sumy - (m * sumx)) / n
 
-print(
-    tabulate(
-        table,
-        ["iteration", "xi", "xs", "xr", "fxi", "fxs", "fxr", "error"],
-        tablefmt="grid",
-    )
-)
+print(f"m is {m}")
+print(f"b is {b}")
+print(f"Linear equation is: y = {m}x + {b}")
+print(f"5 evaluated in equation is {m*5 + b}")
 
-plt.plot(xn, fxn)
+plt.scatter(x, y)
 plt.grid()
 
 # %%
