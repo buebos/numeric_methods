@@ -72,12 +72,13 @@ for i in range(1, matrix_side + 1):
     matrix.append([])
 
     for j in range(1, matrix_side + 1):
+        renderMatrix(matrix)
+
         matrix[i - 1].append(
             persist_input(
                 input(f"Introduce el índice [{i}][{j}] de la matriz: "),
             )
         )
-        renderMatrix(matrix)
 
         clear()
 
@@ -103,6 +104,7 @@ for i in range(0, matrix_side):
         current_diag = matrix[i][i]
 
         if current_diag == 0:
+            det = 0
             break
 
     det *= current_diag
