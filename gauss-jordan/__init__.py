@@ -1,7 +1,5 @@
 import os
 
-OPERATION_SYMBOLS = ["-", "+"]
-
 
 def clear():
     os.system("cls" if os.name == "nt" else "clear")
@@ -34,94 +32,69 @@ def renderMatrix(matrix: list[list[float]]):
     print()
 
 
-def parse_matrix(equation: str):
-    literals: list[str] = []
-    lastIsLiteral = False
-    awaitingSymbol = None
-    coeficients: list[str] = []
-
-    for char in equation:
-        if (
-            not char.isdigit() and char != symbol
-            for symbol in OPERATION_SYMBOLS
-        ):
-            literals.append(char)
-            lastIsLiteral = True
-
-        if (char == symbol for symbol in OPERATION_SYMBOLS):
-            awaitingSymbol = char
-
-        if char.isdigit() and awaitingSymbol:
-            coeficients.append(awaitingSymbol + char)
-
-
 clear()
 
 matrix: list[list[float]] = []
-matrix_side = int(
+matrix_sqr_side = int(
     persist_input(
         input("Introduce el tamaño de la matriz: "),
         lambda numeric_value: numeric_value > 0,
     )
 )
-det = 1
+matrix_cols = matrix_sqr_side + 1
 
 clear()
 
-for i in range(1, matrix_side + 1):
+for diag_i in range(1, matrix_sqr_side + 1):
     matrix.append([])
 
-    for j in range(1, matrix_side + 1):
-        renderMatrix(matrix)
-
-        matrix[i - 1].append(
-            persist_input(
-                input(f"Introduce el índice [{i}][{j}] de la matriz: "),
-            )
+    for eval_row in range(1, matrix_cols + 1):
+        print(
+            "Ahora, introduce los elementos de la matriz cuadrada, estos deberían corresponder a los coeficientes de las ecuaciones que tienes en tu sistema. Posteriormente, también se introducirá el resultado correspondiente a la fila actual.\n"
         )
 
+        renderMatrix(matrix)
+
+        if eval_row <= matrix_sqr_side:
+            matrix[diag_i - 1].append(
+                persist_input(
+                    input(
+                        f"Introduce el coeficiente [{diag_i}][{eval_row}] del sistema: "
+                    ),
+                )
+            )
+        else:
+            matrix[diag_i - 1].append(
+                persist_input(
+                    input(
+                        f"Introduce el resultado de la fila [{diag_i}] del sistema: "
+                    ),
+                )
+            )
         clear()
 
-
-original_matrix = matrix.copy()
-
-# Desde la primera fila hasta n - 1 filas, debido a que la última
-# ya no tiene elementos debajo para convertir a 0
-for i in range(0, matrix_side):
-    current_diag = matrix[i][i]
+for diag_i in range(0, matrix_sqr_side):
+    diag_element = matrix[diag_i][diag_i]
 
     # Invertir las filas si algun elemento de la diagonal es 0
-    if current_diag == 0:
-        for j in range(i + 1, matrix_side):
-            if matrix[j][i] != 0:
-                matrix[i], matrix[j] = (
-                    matrix[j],
-                    matrix[i],
-                )
-                det = -det
+    if diag_element == 0:
+        for eval_col in range(diag_i + 1, matrix_sqr_side):
+            if matrix[diag_i][eval_col] != 0:
+                diag_element = matrix[diag_i][eval_col]
 
                 break
-        current_diag = matrix[i][i]
 
-        if current_diag == 0:
-            det = 0
-            break
-
-    det *= current_diag
-
-    if i >= matrix_side - 1:
-        break
+    if diag_element != 1:
+        for col in range(0, matrix_cols):
+            matrix[diag_i][col] = matrix[diag_i][col] / diag_element
 
     # Iteramos entre filas
-    for j in range(i + 1, matrix_side):
-        current_substract = matrix[j][i]
-        for k in range(i, matrix_side):
-            substraction = current_substract * matrix[i][k] / current_diag
-            matrix[j][k] = matrix[j][k] - substraction
+    for eval_row in range(0, matrix_sqr_side):
+        if eval_row != diag_i:
+            row_factor = matrix[eval_row][diag_i]
 
-
-renderMatrix(original_matrix)
-renderMatrix(matrix)
-
-print("Determinante:", det)
-#%%
+            for eval_col in range(0, matrix_cols):
+                substraction = row_factor * matrix[diag_i][eval_col]
+                matrix[eval_row][eval_col] = (
+                    matrix[eval_row][eval_col] - substraction
+                )
