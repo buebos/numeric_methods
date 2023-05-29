@@ -187,7 +187,6 @@ if is_arbitrary:
         fn = fns[j]
         results.append([j, fn(arbitrary_val)])
         print(f"El valor de la variable {j + 1}:", fn(arbitrary_val))
-
 elif is_inconsistent:
     print("The equations are inconsistent")
 else:
