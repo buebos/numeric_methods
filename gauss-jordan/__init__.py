@@ -5,6 +5,15 @@ def clear():
     os.system("cls" if os.name == "nt" else "clear")
 
 
+def roundIfNear(x: float, thresh=0.999999):
+    if x - int(x) > thresh:
+        return int(x) + 1
+    elif x - int(x) < 1 - thresh:
+        return int(x)
+
+    return x
+
+
 def persist_input(
     prompt: str,
     isRightCall=lambda numeric_value: numeric_value != None,
@@ -26,9 +35,7 @@ def persist_input(
     return numeric_value
 
 
-def unpermutate_matrix(
-    incoming_matrix: list[list[float]], permutations: list[list[int]]
-):
+def unpermutate_matrix(incoming_matrix: list[list[float]], permutations: list[list[int]]):
     matrix = incoming_matrix.copy()
 
     if len(permutations):
@@ -84,11 +91,7 @@ for diag_i in range(1, matrix_sqr_side + 1):
         render_matrix(matrix)
 
         if eval_row <= matrix_sqr_side:
-            matrix[diag_i - 1].append(
-                persist_input(
-                    f"Introduce el coeficiente [{diag_i}][{eval_row}] del sistema: "
-                )
-            )
+            matrix[diag_i - 1].append(persist_input(f"Introduce el coeficiente [{diag_i}][{eval_row}] del sistema: "))
         else:
             matrix[diag_i - 1].append(
                 persist_input(
@@ -126,22 +129,17 @@ for diag_i in range(0, matrix_sqr_side):
 
             for eval_col in range(0, matrix_cols):
                 substraction = row_factor * matrix[diag_i][eval_col]
-                matrix[eval_row][eval_col] = (
-                    matrix[eval_row][eval_col] - substraction
-                )
+                matrix[eval_row][eval_col] = matrix[eval_row][eval_col] - substraction
 
 unpermutated_matrix_solved = unpermutate_matrix(matrix, permutations)
 results: list[list[float]] = []
 
-if len(permutations):
-    print("Sistema permutado:")
-    render_matrix(matrix)
-print("Sistema resulto:")
-render_matrix(unpermutated_matrix_solved)
-
 for row in range(matrix_sqr_side):
     vars_found = 0
     var_index = 0
+
+    matrix[row][matrix_cols - 1] = roundIfNear(matrix[row][matrix_cols - 1])
+    unpermutated_matrix_solved[row][matrix_cols - 1] = roundIfNear(unpermutated_matrix_solved[row][matrix_cols - 1])
 
     for j in range(matrix_sqr_side):
         if matrix[row][j] != 0:
@@ -154,6 +152,12 @@ for row in range(matrix_sqr_side):
         is_arbitrary = True
     elif vars_found == 0 and matrix[row][matrix_cols - 1] != 0:
         is_inconsistent = True
+
+if len(permutations):
+    print("Sistema permutado:")
+    render_matrix(matrix)
+print("Sistema resulto:")
+render_matrix(unpermutated_matrix_solved)
 
 if is_arbitrary:
     fns = []
@@ -174,10 +178,7 @@ if is_arbitrary:
             fns.append(lambda arbitrary_val: arbitrary_val)
             continue
 
-        fns.append(
-            lambda arbitrary_val: matrix[j][-1]
-            - arbitrary_val * matrix[j][-2]
-        )
+        fns.append(lambda arbitrary_val: matrix[j][-1] - arbitrary_val * matrix[j][-2])
 
     arbitrary_val = persist_input(
         f"El sistema es arbitrario en función de la variable número {arbitrary_index}, introduce un valor para definir todas las demás variables del sistema: "
@@ -186,9 +187,9 @@ if is_arbitrary:
     for j in range(len(fns)):
         fn = fns[j]
         results.append([j, fn(arbitrary_val)])
-        print(f"El valor de la variable {j + 1}:", fn(arbitrary_val))
+        print(f"El valor de la variable {j + 1}:", results[j][1])
 elif is_inconsistent:
-    print("The equations are inconsistent")
+    print("Las ecuaciones son incosistentes, por lo tanto una solucion no pudo ser encontrada")
 else:
     for result in results:
         print(f"El valor de la variable {result[0] + 1}:", result[1])
