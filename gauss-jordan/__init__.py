@@ -65,7 +65,7 @@ permutations: list[list[int]] = []
 is_inconsistent = False
 is_arbitrary = False
 
-matrix = [
+example_matrix = [
     [0, 4, -8, 24],
     [3, -3, 9, -15],
     [2, 4, -6, 26],
@@ -97,7 +97,6 @@ for diag_i in range(1, matrix_sqr_side + 1):
             )
         clear()
 
-original_matrix = [row[:] for row in matrix]
 
 for diag_i in range(0, matrix_sqr_side):
     diag_element = matrix[diag_i][diag_i]
@@ -134,8 +133,6 @@ for diag_i in range(0, matrix_sqr_side):
 unpermutated_matrix_solved = unpermutate_matrix(matrix, permutations)
 results: list[list[float]] = []
 
-print("Sistema original:")
-render_matrix(original_matrix)
 if len(permutations):
     print("Sistema permutado:")
     render_matrix(matrix)
