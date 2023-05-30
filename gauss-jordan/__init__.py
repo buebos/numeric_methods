@@ -1,12 +1,12 @@
-import os
-from typing import Callable
-from copy import deepcopy
-
 Matrix = list[list[float]]
 
 
 def clear():
-    os.system("cls" if os.name == "nt" else "clear")
+    print("\033[H\033[J", end="")
+
+
+def copy_matrix(matrix: Matrix):
+    return [row[:] for row in matrix]
 
 
 def trunc_if_near(x: float, thresh: float = 0.999999):
@@ -23,7 +23,7 @@ def trunc_if_near(x: float, thresh: float = 0.999999):
 
 def persist_input(
     prompt: str,
-    isRightCall: Callable[[float], bool] = lambda numeric_value: not not numeric_value or numeric_value == 0,
+    isRightCall=lambda numeric_value: not not numeric_value or numeric_value == 0,
 ):
     numeric_value = None
 
@@ -94,7 +94,7 @@ def render_results(original_matrix: Matrix, result_matrix: Matrix, results: str 
     if results == "arbitrary":
         system_size = len(result_matrix)
         arbitrary_index = system_size - 1
-        fns: list[Callable[[float], float]] = []
+        fns: list = []
         arbitrary_results: list[float] = []
 
         for col in range(system_size):
@@ -127,7 +127,7 @@ def render_results(original_matrix: Matrix, result_matrix: Matrix, results: str 
 
 
 def gauss_jordan(original_matrix: Matrix):
-    matrix = deepcopy(original_matrix)
+    matrix = copy_matrix(original_matrix)
     matrix_rows = len(original_matrix)
     matrix_cols = matrix_rows + 1
 
