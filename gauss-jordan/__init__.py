@@ -3,6 +3,63 @@ Matrix = list[list[float]]
 
 def clear():
     print("\033[H\033[J", end="")
+    print(
+        """
+ooo        ooooo               .             o8o                   oooooooooooo oooo                     oooo        
+`88.       .888'             .o8             `"'                   `888'     `8 `888                     `888        
+ 888b     d'888   .oooo.   .o888oo oooo d8b oooo  oooo    ooo       888          888   .oooo.    .oooo.o  888  oooo  
+ 8 Y88. .P  888  `P  )88b    888   `888""8P `888   `88b..8P'        888oooo8     888  `P  )88b  d88(  "8  888 .8P'   
+ 8  `888'   888   .oP"888    888    888      888     Y888'          888    "     888   .oP"888  `"Y88b.   888888.    
+ 8    Y     888  d8(  888    888 .  888      888   .o8"'88b         888          888  d8(  888  o.  )88b  888 `88b.  
+o8o        o888o `Y888""8o   "888" d888b    o888o o88'   888o      o888o        o888o `Y888""8o 8""888P' o888o o888o 
+                                                                                                                     
+                                                                                                                   
+          """
+    )
+
+
+def transpose(
+    input_arr: list[list],
+):
+    output_arr: list[list] = []
+
+    for i in range(len(input_arr)):
+        for j in range(len(input_arr[i])):
+            if len(output_arr) <= j:
+                output_arr.append([])
+
+            output_arr[j].append(input_arr[i][j])
+    return output_arr
+
+
+def tabulate(headers: list[str], data: list[list]):
+    column_width = 10
+    data = transpose(data)
+    table_res = (
+        "_" * (((len(data[0]) + 1) * (column_width)) - 1) + "_" + "\n"
+    )
+
+    for i in range(len(data)):
+        table_res += "\n"
+        header = headers[i]
+
+        table_res += (
+            header[0:column_width]
+            + " " * (column_width - len(header))
+            + "|"
+        )
+
+        for j in range(len(data[i])):
+            cell_data = str(data[i][j])[0:9]
+            table_res += (
+                cell_data + " " * (column_width - len(cell_data) - 1) + "|"
+            )
+
+        table_res += (
+            "\n" + "_" * ((len(data[i]) + 1) * column_width) + "|" + "\n"
+        )
+
+    return table_res
 
 
 def copy_matrix(matrix: Matrix):
@@ -23,7 +80,8 @@ def trunc_if_near(x: float, thresh: float = 0.999999):
 
 def persist_input(
     prompt: str,
-    isRightCall=lambda numeric_value: not not numeric_value or numeric_value == 0,
+    isRightCall=lambda numeric_value: not not numeric_value
+    or numeric_value == 0,
 ):
     numeric_value = None
 
@@ -44,6 +102,9 @@ def persist_input(
 
 def render_capture_matrix():
     matrix: Matrix = []
+
+    clear()
+
     system_size = int(
         persist_input(
             "Introduce el tamaño de la matriz: ",
@@ -66,7 +127,9 @@ def render_capture_matrix():
 
             if row <= system_size:
                 matrix[diag_i].append(
-                    persist_input(f"Introduce el coeficiente [{diag_i + 1}][{row + 1}] del sistema: ")
+                    persist_input(
+                        f"Introduce el coeficiente [{diag_i + 1}][{row + 1}] del sistema: "
+                    )
                 )
             else:
                 matrix[diag_i].append(
@@ -83,47 +146,6 @@ def render_matrix(matrix: Matrix):
     for i in range(0, len(matrix)):
         print(matrix[i])
     print()
-
-
-def render_results(original_matrix: Matrix, result_matrix: Matrix, results: str | list[float]):
-    print("Sistema original:")
-    render_matrix(original_matrix)
-    print("Sistema resulto:")
-    render_matrix(result_matrix)
-
-    if results == "arbitrary":
-        system_size = len(result_matrix)
-        arbitrary_index = system_size - 1
-        fns: list = []
-        arbitrary_results: list[float] = []
-
-        for col in range(system_size):
-            var_repeated = 0
-
-            for row in range(system_size):
-                if result_matrix[row][col] != 0:
-                    var_repeated += 1
-
-            if var_repeated == system_size - 1:
-                arbitrary_index = col
-                fns.append(lambda arbitrary_val: arbitrary_val)
-                break
-
-            fns.append(lambda arbitrary_val: result_matrix[j][-1] - arbitrary_val * result_matrix[j][-2])
-
-        arbitrary_val = persist_input(
-            f"El sistema es arbitrario en función de la variable número {arbitrary_index + 1}, introduce un valor para definir todas las demás variables del sistema: "
-        )
-
-        for j in range(len(fns)):
-            fn = fns[j]
-            arbitrary_results.append(fn(arbitrary_val))
-            print(f"El valor de la variable {j + 1}:", arbitrary_results[j])
-    elif results == "inconsistent":
-        print("Las ecuaciones son incosistentes, por lo tanto una solucion no pudo ser encontrada")
-    else:
-        for i in range(len(results)):
-            print(f"El valor de la variable {i + 1}:", results[i])
 
 
 def gauss_jordan(original_matrix: Matrix):
@@ -158,7 +180,9 @@ def gauss_jordan(original_matrix: Matrix):
 
                 for eval_col in range(0, matrix_cols):
                     substraction = row_factor * matrix[diag_i][eval_col]
-                    matrix[eval_row][eval_col] = matrix[eval_row][eval_col] - substraction
+                    matrix[eval_row][eval_col] = (
+                        matrix[eval_row][eval_col] - substraction
+                    )
 
     for i in range(matrix_rows):
         matrix[i][-1] = trunc_if_near(matrix[i][-1])
@@ -188,6 +212,28 @@ def evaluate_gauss_jordan(matrix: Matrix):
     return results
 
 
+def solve_arbitrary(result_matrix: Matrix):
+    results: list[float] = []
+    system_size = len(result_matrix)
+    arbitrary_val = persist_input(
+        f"El sistema es arbitrario en función de una variable, introduce un valor para definir todas las demás variables del sistema: "
+    )
+    for row in range(system_size):
+        vars_in_row = 0
+        for col in range(system_size):
+            if result_matrix[row][col] != 0:
+                vars_in_row += 1
+        if not vars_in_row:
+            results.append(arbitrary_val)
+        else:
+            results.append(
+                result_matrix[row][-1]
+                - arbitrary_val * result_matrix[row][-2]
+            )
+
+    return results
+
+
 def check_matrix_results(original_matrix: Matrix, results: list[float]):
     system_size = len(original_matrix)
     evaluations: Matrix = []
@@ -205,33 +251,104 @@ def check_matrix_results(original_matrix: Matrix, results: list[float]):
 
 
 def main(render_result_check: bool = True, use_example: bool = False):
-    original_matrix = []
     if not use_example:
         original_matrix = render_capture_matrix()
     else:
+        clear()
         original_matrix = [
-            [4.0, 6.0, 9.0, 1.0, -4.0, 23.0, 12.0, -32.0, -21.0, 44.0, 98.0],
+            [
+                4.0,
+                6.0,
+                9.0,
+                1.0,
+                -4.0,
+                23.0,
+                12.0,
+                -32.0,
+                -21.0,
+                44.0,
+                98.0,
+            ],
             [-3.0, 4.0, 6.0, 9.0, 3.0, 98.0, 1.0, 23.0, -5.0, -6.0, 66.0],
-            [2.0, 3.0, -3.0, -4.0, 2.0, -22.0, 33.0, 55.0, -4.0, 4.0, -22.0],
+            [
+                2.0,
+                3.0,
+                -3.0,
+                -4.0,
+                2.0,
+                -22.0,
+                33.0,
+                55.0,
+                -4.0,
+                4.0,
+                -22.0,
+            ],
             [3.0, 3.0, -3.0, 4.0, 1.0, 5.0, 22.0, 44.0, -7.0, 5.0, -33.0],
-            [6.0, 4.0, 2.0, 1.0, 22.0, 44.0, 55.0, 33.0, -99.0, 6.0, -33.0],
+            [
+                6.0,
+                4.0,
+                2.0,
+                1.0,
+                22.0,
+                44.0,
+                55.0,
+                33.0,
+                -99.0,
+                6.0,
+                -33.0,
+            ],
             [12.0, 2.0, 5.0, 6.0, 1.0, 1.0, 77.0, 2.0, -33.0, -8.0, -44.0],
             [4.0, 3.0, 2.0, 5.0, 2.0, 56.0, 8.0, 3.0, -1.0, 9.0, -99.0],
-            [4.0, -5.0, -5.0, 4.0, 3.0, 76.0, 9.0, -6.0, -7.0, -21.0, 100.0],
+            [
+                4.0,
+                -5.0,
+                -5.0,
+                4.0,
+                3.0,
+                76.0,
+                9.0,
+                -6.0,
+                -7.0,
+                -21.0,
+                100.0,
+            ],
             [6.0, -7.0, -9.0, 2.0, 5.0, 33.0, 10.0, 0.0, 2.0, -2.0, 8.0],
             [4.0, 10.0, 5.0, 1.0, 6.0, 22.0, 11.0, 1.0, 3.0, -2, 9],
         ]
+    header_results = ["# Variable", "Valor"]
     result_matrix = gauss_jordan(original_matrix)
     results = evaluate_gauss_jordan(result_matrix)
 
-    render_results(original_matrix, result_matrix, results)
+    if results == "arbitrary":
+        results = solve_arbitrary(result_matrix)
+        print(
+            tabulate(
+                header_results,
+                [[i + 1, results[i]] for i in range(len(results))],
+            )
+        )
+    elif results == "inconsistent":
+        print(
+            "Las ecuaciones son incosistentes, por lo tanto una solucion no pudo ser encontrada"
+        )
+    else:
+        print(
+            tabulate(
+                header_results,
+                [[i + 1, results[i]] for i in range(len(results))],
+            )
+        )
 
     if not isinstance(results, str) and render_result_check:
-        checks = check_matrix_results(original_matrix, results)
-        [
-            print(f"Resultado obtenido para la fila {i}: {checks[i][0]} | Resultados dado: {checks[i][1]}")
-            for i in range(len(checks))
-        ]
+        print(
+            "\nAl realizar las ecuaciones, se obtuvieron los siguientes resultados para cada fila, contra el resultado que se proporcionaba en la matriz original:"
+        )
+        print(
+            tabulate(
+                ["Resultado", "Original"],
+                check_matrix_results(original_matrix, results),
+            )
+        )
 
 
 main(render_result_check=True, use_example=False)
