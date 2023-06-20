@@ -115,26 +115,26 @@ def render_capture_matrix():
 
     clear()
 
-    for diag_i in range(system_size):
+    for row in range(system_size):
         matrix.append([])
 
-        for row in range(matrix_cols):
+        for col in range(matrix_cols):
             print(
                 "Ahora, introduce los elementos de la matriz cuadrada, estos deberían corresponder a los coeficientes de las ecuaciones que tienes en tu sistema. Posteriormente, también se introducirá el resultado correspondiente a la fila actual.\n"
             )
 
             render_matrix(matrix)
 
-            if row <= system_size:
-                matrix[diag_i].append(
+            if col < system_size:
+                matrix[row].append(
                     persist_input(
-                        f"Introduce el coeficiente [{diag_i + 1}][{row + 1}] del sistema: "
+                        f"Introduce el coeficiente [{row + 1}][{col + 1}] del sistema: "
                     )
                 )
             else:
-                matrix[diag_i].append(
+                matrix[row].append(
                     persist_input(
-                        f"Introduce el resultado de la fila [{diag_i + 1}] del sistema (este valor es parte de la extensión): "
+                        f"Introduce el resultado de la fila [{row + 1}] del sistema (este valor es parte de la extensión): "
                     )
                 )
             clear()
